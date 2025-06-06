@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>URL Cleaner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+    }
+
+    input[type="text"] {
+      width: 400px;
+      padding: 0.5em;
+    }
+
+    button {
+      padding: 0.5em 1em;
+      margin-left: 0.5em;
+    }
+
+    #output {
+      margin-top: 1.5em;
+      font-weight: bold;
+    }
+
+    #copy-btn {
+      margin-left: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>URL Cleaner</h2>
+  <input type="text" id="url-input" placeholder="Paste your URL here" />
+  <button id="clean-btn">Clean URL</button>
+  <button id="clean-and-go-btn">Clean & Go</button>
+  <div id="output" style="display:none;">
+    <span id="cleaned-url"></span>
+    <button id="copy-btn">Copy to Clipboard</button>
+    <button id="go-btn">Go to Clean URL</button>
+  </div>
+  <script>
+    function cleanUrl(url) {
+      try {
+        const u = new URL(url);
+        return u.origin + u.pathname;
+      } catch (e) {
+        return '';
+      }
+    }
+
+    document.getElementById('clean-btn').onclick = function () {
+      const input = document.getElementById('url-input').value.trim();
+      const cleaned = cleanUrl(input);
+      const outputDiv = document.getElementById('output');
+      const cleanedSpan = document.getElementById('cleaned-url');
+      if (cleaned) {
+        cleanedSpan.textContent = cleaned;
+        outputDiv.style.display = 'block';
+      } else {
+        cleanedSpan.textContent = 'Invalid URL';
+        outputDiv.style.display = 'block';
+      }
+    };
+
+    document.getElementById('copy-btn').onclick = function () {
+      const cleaned = document.getElementById('cleaned-url').textContent;
+      if (cleaned && cleaned !== 'Invalid URL') {
+        navigator.clipboard.writeText(cleaned);
+      }
+    };
+
+    document.getElementById('go-btn').onclick = function () {
+      const cleaned = document.getElementById('cleaned-url').textContent;
+      if (cleaned && cleaned !== 'Invalid URL') {
+        window.location.href = cleaned;
+      }
+    };
+
+    document.getElementById('clean-and-go-btn').onclick = function () {
+      const input = document.getElementById('url-input').value.trim();
+      const cleaned = cleanUrl(input);
+      if (cleaned) {
+        window.location.href = cleaned;
+      }
+    };
+  </script>
+</body>
+
+</html>
